@@ -7,7 +7,7 @@ library(colourpicker)
 library(shinyjs)
 library(shinyWidgets) # for downloadBttn
 library(DT)
-library(rhandsontable) # for interactive table
+#library(rhandsontable) # for interactive table
 library(data.table)
 library(shinyBS)
 
@@ -173,7 +173,7 @@ server <- function(input, output, session) {
         })
         output$sample_point_labels <- renderUI({
           selectInput("point_labels", label = h6("Name points by:"),
-                      choices =  c("no_label_by", colnames(input_sampletable())), 
+                      choices =  c("default_label","no_label", colnames(input_sampletable())), 
                       selected = 1)
         })
         
@@ -228,11 +228,14 @@ server <- function(input, output, session) {
       # merge data frame with sample table
       df_pca <- merge(df_pca0, pca_grouping_colors, by.x="sample", by.y=1, all=T)
       
-      # if no point label is specified, take sample names are labels
-      if(input$point_labels != "no_label_by"){
+      # by default, sample names are labels
+      if(input$point_labels != "default_label" & input$point_labels != "no_label"){
         # remove "names" column to replace it by user chosen column for labels
         df_pca <- df_pca[,-grep("^sample$", colnames(df_pca))]
         colnames(df_pca)[grep(paste0("^",input$point_labels,"$"), colnames(df_pca))] <- "name_points"
+        #if "no_label" is specified, create an empty column as labels
+      }else if(input$point_labels == "no_label"){
+        df_pca$name_points <- ""
       }else{
         colnames(df_pca)[grep("^sample$", colnames(df_pca))] <- "name_points"
       }
