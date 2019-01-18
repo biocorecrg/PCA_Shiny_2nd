@@ -1,17 +1,18 @@
 ### Shiny app for building PCA plots
 # Author: Sarah Bonnin - sarah.bonnin@crg.eu
 
+.libPaths(c("/R_packages", .libPaths()))
+
 library(shiny)
 library(ggplot2)
 library(colourpicker)
 library(shinyjs)
 library(shinyWidgets) # for downloadBttn
 library(DT)
-#library(rhandsontable) # for interactive table
 library(data.table)
 library(shinyBS)
 
-options(shiny.maxRequestSize=100*1024^2) # sets the max file to load to 100Mb
+options(shiny.maxRequestSize=8000*1024^2) # sets the max file to load to 100Mb
 
 # Define UI for application that draws a PCA
 ui <- fluidPage(
